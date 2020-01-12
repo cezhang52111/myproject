@@ -2,6 +2,8 @@ use pallet_contracts::MockExt;
 use pallet_contracts::gas::{Gas, GasMeter};
 use std::env;
 use std::fs;
+
+
 const CODE_GET_STORAGE: &str = r#"
 (module
 	(import "env" "ext_get_storage" (func $ext_get_storage (param i32) (result i32)))
@@ -317,16 +319,16 @@ fn main() {
 	// 		.storage
     // 		.insert([0x11; 32], [0x22; 32].to_vec());
     let contents = fs::read_to_string("flipper.wat").expect("Something wrong");
-    // let output = pallet_contracts::execute(
-    //     &contents,
-    //     vec![0x8C,0x97,0xDB,0x39],
-    //     &mut mock_ext,
-    //     &mut GasMeter::with_limit(100_000, 1),
-    // );
+    let output = pallet_contracts::execute(
+        &contents,
+        vec![0x8C,0x97,0xDB,0x39],
+        &mut mock_ext,
+        &mut GasMeter::with_limit(100_000, 1),
+    );
 
     let output = pallet_contracts::execute(
-        CODE_GET_STORAGE,
-        vec![],
+        &contents,
+        vec![0x25, 0x44, 0x4A, 0xFE],
         &mut mock_ext,
         &mut GasMeter::with_limit(100_000, 1),
     );
@@ -340,4 +342,6 @@ fn main() {
     for (k, v) in &rkv {
         println!("read k: {:?}, v: {:?}", k, v);
     }
+
+
 }
